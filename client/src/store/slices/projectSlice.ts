@@ -8,6 +8,7 @@ import {
   ProjectQueryOptions 
 } from '@/types/project';
 import { projectService } from '@/services/projectService';
+import { carbonCalculationService } from '@/services/carbonCalculationService';
 
 
 interface ProjectState {
@@ -55,6 +56,34 @@ export const createProject = createAsyncThunk(
       return response;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.error || 'Failed to create project');
+    }
+  }
+);
+
+
+export const calculateProjectCredits = createAsyncThunk(
+  'project/calculateCredits',
+  async (projectId: string, { rejectWithValue, getState }) => {
+    try {
+      // Get the current project
+      const { project } = getState() as { project: ProjectState };
+      const currentProject = project.currentProject;
+      
+      if (!currentProject) {
+        return rejectWithValue('Project not found');
+      }
+      
+      // Calculate carbon credits
+      const calculatedCredits = carbonCalculationService.calculateCredits(currentProject);
+      
+      // Update project with calculated credits
+      const response = await projectService.updateProject(projectId, {
+        carbonCredits: calculatedCredits
+      });
+      
+      return response;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.error || 'Failed to calculate carbon credits');
     }
   }
 );

@@ -127,7 +127,7 @@ export function adaptTokenBalanceToToken(tokenBalance: TokenBalance): Token {
     name: tokenBalance.name,
     projectId: tokenBalance.projectId,
     projectName: tokenBalance.projectName,
-    owner: '', // Default value
+    owner: '',
     amount: tokenBalance.amount,
     price: tokenBalance.price,
     currentPrice: tokenBalance.price,

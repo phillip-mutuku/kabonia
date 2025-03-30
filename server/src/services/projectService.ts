@@ -251,7 +251,6 @@ updateProjectStatus: async (
     // Automatically tokenize the project if status is changed to active and project doesn't have a token yet
     if (status === constants.PROJECT_STATUS.ACTIVE && !project.tokenId && verifierId) {
       try {
-        // Import tokenService at the top of the file if not already imported
         const tokenization = await tokenService.tokenizeVerifiedProject(
           projectId,
           verifierId,
@@ -265,7 +264,6 @@ updateProjectStatus: async (
         return tokenization.project;
       } catch (tokenError) {
         logger.error(`Failed to tokenize project automatically: ${tokenError}`);
-        // Continue and return the project anyway
       }
     }
     

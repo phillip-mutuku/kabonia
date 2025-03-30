@@ -56,6 +56,7 @@ export interface Project {
   price?: number;
   verificationStatus?: VerificationStatus;
   estimatedCarbonCapture?: number;
+  actualCarbonCapture?: number;
   createdAt: string;
   updatedAt: string;
   verificationHistory?: VerificationHistoryRecord[];
@@ -89,6 +90,8 @@ export interface UpdateProjectInput {
   documents?: File[];
   status?: ProjectStatus;
   price?: number;
+  carbonCredits?: number;
+  verificationStatus?: VerificationStatus;
 }
 
 // Project filter options

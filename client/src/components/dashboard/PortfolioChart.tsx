@@ -29,8 +29,7 @@ export const PortfolioChart: React.FC = () => {
   const tokens = useSelector((state: RootState) => state.token.userTokens);
   const tokenValues = useSelector((state: RootState) => state.token.tokens);
 
-  // In a real app, you would filter data based on timeRange and calculate based on real holdings
-  // For the demo, we'll enhance the sample data with real market trends
+  //sample data with real market trends
   const chartData = SAMPLE_DATA;
 
   const timeRangeOptions: TimeRangeOption[] = ['1W', '1M', '3M', '6M', 'YTD', '1Y', 'All'];
@@ -251,7 +250,7 @@ export const PortfolioChart: React.FC = () => {
                 yAxisId="left"
                 type="monotone"
                 dataKey="price"
-                stroke="#800020" // Maroon color
+                stroke="#800020"
                 strokeWidth={3}
                 dot={{ r: 0 }}
                 activeDot={{ r: 8, strokeWidth: 0, fill: '#800020' }}
@@ -261,7 +260,7 @@ export const PortfolioChart: React.FC = () => {
                 yAxisId="left"
                 type="monotone"
                 dataKey="projectedPrice"
-                stroke="#B8860B" // Dark yellow
+                stroke="#B8860B"
                 strokeWidth={3}
                 strokeDasharray="5 5"
                 dot={{ r: 0 }}

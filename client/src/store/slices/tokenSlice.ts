@@ -3,7 +3,6 @@ import { Token, TokenBalance, CreateTokenInput, TokenTransferInput, TokenMintInp
 import { tokenService } from '@/services/tokenService';
 import { QueryOptions } from '@/types/index';
 
-// Extend QueryOptions with token-specific filters
 export interface TokenQueryOptions extends QueryOptions {
   projectId?: string;
   status?: string;

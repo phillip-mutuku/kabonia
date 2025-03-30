@@ -17,7 +17,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: 'CarbonX - Carbon Credit Platform',
+  title: 'Kabonia - Carbon Credit Platform',
   description: 'Trade and invest in carbon credits with blockchain-backed verification',
 };
 

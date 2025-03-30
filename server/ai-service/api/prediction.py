@@ -7,17 +7,16 @@ from fastapi import HTTPException
 
 def predict_carbon_value(project_data: ProjectData, model=None) -> PredictionResponse:
     try:
-        # If we have a trained model, use it
+        # trained model, use it
         if model is not None:
             # Extract features for the model
             features = extract_features(project_data)
             prediction = model.predict([features])[0]
             
-            # For regression, use R-squared as a proxy for confidence
             # Assuming the model has an attribute 'score' from training
             confidence = 0.85  # Default confidence if no score available
             
-            # You can add a try-block to get actual model score if needed
+            # You can add a try-block to get actual model score
             try:
                 # This would typically be calculated during model training
                 confidence = min(0.95, max(0.5, model.score))

@@ -6,6 +6,7 @@ import { Card } from '@/components/common/Card';
 import { Button } from '@/components/common/Button';
 import { createToken } from '@/store/slices/tokenSlice';
 import { verificationService } from '@/services/verificationService';
+import { carbonCalculationService } from '@/services/carbonCalculationService';
 import { tokenService } from '@/services/tokenService';
 import { VerificationBadge } from './VerificationBadge';
 
@@ -18,43 +19,68 @@ interface VerificationProcessProps {
     area: number;
     projectType: string;
     verificationStatus?: string;
+    status?: string;
   };
+}
+
+interface AdditionalInfo {
+  text?: string;
+  baselineEmissions?: string;
+  [key: string]: any;
+}
+
+interface VerificationResult {
+  _id: string;
+  status: string;
+  createdAt: string;
+  documents?: any[];
+  carbonCaptureVerified?: number;
+  results?: {
+    carbonCredits?: number;
+    recommendations?: string[];
+  };
+  comments?: string;
+  verificationHistory?: Array<any>;
 }
 
 export const VerificationProcess: React.FC<VerificationProcessProps> = ({ project }) => {
   const dispatch = useDispatch();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [verification, setVerification] = useState<any>(null);
   const [documents, setDocuments] = useState<File[]>([]);
-  const [additionalInfo, setAdditionalInfo] = useState('');
+  const [additionalInfo, setAdditionalInfo] = useState<AdditionalInfo>({});
   const [error, setError] = useState('');
   const [projectToken, setProjectToken] = useState<any>(null);
   const [isCreatingToken, setIsCreatingToken] = useState(false);
+  const [verification, setVerification] = useState<VerificationResult | null>(null);
+
 
   // Fetch verification data if already started
   useEffect(() => {
     const fetchVerification = async () => {
       try {
         setLoading(true);
-        const verification = await verificationService.getProjectVerification(project._id);
-        setVerification(verification);
-        
-        // Check if verification exists before accessing properties
-        if (verification) {
+        const verificationResult = await verificationService.getProjectVerification(project._id);
+
+        if (verificationResult) {
+
+          setVerification(verificationResult as unknown as VerificationResult);
+          
           // Set step based on verification status
-          if (verification.status === 'pending') {
+          if (verificationResult.status === 'pending') {
             setStep(3);
-          } else if (verification.status === 'in_progress') {
+          } else if (verificationResult.status === 'in_progress') {
             setStep(4);
-          } else if (verification.status === 'approved' || verification.status === 'rejected') {
+          } else if (verificationResult.status === 'approved' || verificationResult.status === 'rejected') {
             setStep(5);
             
             // Check if a token exists for this project
-            if (verification.status === 'approved') {
+            if (verificationResult.status === 'approved') {
               checkForProjectToken();
             }
           }
+        } else {
+          setVerification(null);
         }
       } catch (error) {
         console.log('No verification found or error:', error);
@@ -115,14 +141,22 @@ export const VerificationProcess: React.FC<VerificationProcessProps> = ({ projec
         setLoading(true);
         setError('');
         
-        // Use the new combined method
-        await verificationService.submitProjectForVerification(
-          project._id,
-          {
-            documents: documents,
-            additionalInfo: additionalInfo
-          }
-        );
+        const calculatedCredits = carbonCalculationService.calculateCredits(project);
+
+          // Convert to JSON string for compatibility with your API
+          const additionalInfoString = JSON.stringify({
+            ...additionalInfo,
+            calculatedCredits: calculatedCredits
+          });
+
+          // Submit with proper calculation
+          await verificationService.submitProjectForVerification(
+            project._id,
+            {
+              documents: documents,
+              additionalInfo: additionalInfoString
+            }
+          );
         
         // Move to next step after successful submission
         setStep(3);
@@ -153,21 +187,34 @@ export const VerificationProcess: React.FC<VerificationProcessProps> = ({ projec
               <div className="mt-2 text-sm text-green-700">
                 <p>Your project has been successfully verified.</p>
                 
-                {verification.results && (
+                <div className="mt-4 bg-green-50 p-4 rounded-md border border-green-200">
+                  <h3 className="text-sm font-medium text-green-800">Carbon Credits Calculation</h3>
+                  <div className="mt-2 grid grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-xs font-medium text-gray-500">Total Area</p>
+                      <p className="text-base font-semibold">{project.area} hectares</p>
+                    </div>
+                    <div>
+                      <p className="text-xs font-medium text-gray-500">Project Type</p>
+                      <p className="text-base font-semibold">{project.projectType}</p>
+                    </div>
+                    <div>
+                    <p className="text-xs font-medium text-gray-500">Carbon Credits Awarded</p>
+                    <p className="text-2xl font-bold text-green-700">
+                      {verification.carbonCaptureVerified || verification.results?.carbonCredits || 0}
+                    </p>
+                  </div>
+                  </div>
+                </div>
+                
+                {verification.results && verification.results.recommendations && verification.results.recommendations.length > 0 && (
                   <div className="mt-2">
-                    <p className="font-medium">Carbon Credits Awarded:</p>
-                    <p className="text-2xl font-bold">{verification.results.carbonCredits}</p>
-                    
-                    {verification.results.recommendations && verification.results.recommendations.length > 0 && (
-                      <div className="mt-2">
-                        <p className="font-medium">Recommendations:</p>
-                        <ul className="list-disc pl-5 mt-1">
-                          {verification.results.recommendations.map((rec: string, index: number) => (
-                            <li key={index}>{rec}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
+                    <p className="font-medium">Recommendations:</p>
+                    <ul className="list-disc pl-5 mt-1">
+                    {verification.results.recommendations.map((rec: string, index: number) => (
+                      <li key={index}>{rec}</li>
+                    ))}
+                    </ul>
                   </div>
                 )}
                 
@@ -476,6 +523,20 @@ export const VerificationProcess: React.FC<VerificationProcessProps> = ({ projec
                       </div>
                     )}
                   </div>
+
+                  <div>
+                  <label className="block text-sm font-medium text-gray-700">Carbon Baseline Calculation</label>
+                  <input
+                    type="number"
+                    name="baselineEmissions"
+                    onChange={(e) => setAdditionalInfo({...additionalInfo, baselineEmissions: e.target.value})}
+                    className="mt-1 focus:ring-primary-500 focus:border-primary-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                    placeholder="Tons of CO2 equivalent"
+                  />
+                  <p className="mt-1 text-xs text-gray-500">
+                    Enter the calculated baseline emissions for your project area
+                  </p>
+                </div>
                   
                   <div>
                     <label htmlFor="additionalInfo" className="block text-sm font-medium text-gray-700">
@@ -488,8 +549,8 @@ export const VerificationProcess: React.FC<VerificationProcessProps> = ({ projec
                         rows={4}
                         className="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md"
                         placeholder="Provide any additional context about your project that will help with verification..."
-                        value={additionalInfo}
-                        onChange={(e) => setAdditionalInfo(e.target.value)}
+                        value={additionalInfo.text || ''}
+                        onChange={(e) => setAdditionalInfo({...additionalInfo, text: e.target.value})}
                       />
                     </div>
                   </div>

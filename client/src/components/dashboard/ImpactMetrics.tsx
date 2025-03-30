@@ -22,8 +22,7 @@ export const ImpactMetrics: React.FC = () => {
   const [projectTypePerformance, setProjectTypePerformance] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   
-  // In a real app, you would calculate impact data from projects
-  // For the demo, we'll use sample data
+  //sample data
   const impactData = SAMPLE_DATA;
   
   useEffect(() => {

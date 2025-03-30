@@ -76,8 +76,6 @@ const SAMPLE_TRANSACTIONS: Transaction[] = [
 ];
 
 export const TransactionHistory: React.FC = () => {
-  // In a real app, transactions would come from the Redux store
-  // const { transactions } = useSelector((state: RootState) => state.market);
   
   // For now, we'll use sample data
   const transactions = SAMPLE_TRANSACTIONS;

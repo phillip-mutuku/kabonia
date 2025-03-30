@@ -120,7 +120,6 @@ const userSlice = createSlice({
     })
     .addCase(checkAuthState.fulfilled, (state, action) => {
       state.isLoading = false;
-      // If we already have currentUser, we're good
       if (state.currentUser && state.token) {
         state.isAuthenticated = true;
       }

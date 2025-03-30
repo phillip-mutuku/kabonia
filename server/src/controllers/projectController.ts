@@ -392,7 +392,7 @@ updateProject: async (req: Request, res: Response) => {
   },
 
 
-  // For testing only - remove in production
+  // For testing only
 updateProjectStatusForTesting: async (req: Request, res: Response) => {
   try {
     const { id, status } = req.params;

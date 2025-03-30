@@ -4,13 +4,13 @@ import { constants } from '../config/constants';
 // Geographical coordinates (longitude, latitude)
 interface GeoLocation {
   type: string;
-  coordinates: [number, number]; // [longitude, latitude]
+  coordinates: [number, number];
 }
 
 // Project boundary - for defining the project area
 interface Boundary {
   type: string;
-  coordinates: [number, number][]; // Array of coordinates forming a polygon
+  coordinates: [number, number][];
 }
 
 export interface IProject extends Document {
@@ -19,18 +19,18 @@ export interface IProject extends Document {
   location: string;
   coordinates: GeoLocation;
   boundary?: Boundary;
-  area: number; // In hectares
-  estimatedCarbonCapture: number; // In tons of CO2
-  actualCarbonCapture?: number; // Updated after verification
+  area: number;
+  estimatedCarbonCapture: number;
+  actualCarbonCapture?: number;
   startDate: Date;
   endDate: Date;
-  projectType: string; // e.g., reforestation, conservation, renewable energy
+  projectType: string;
   status: string;
-  owner: mongoose.Types.ObjectId; // User ID of the project owner
-  images?: string[]; // Array of image URLs
-  documents?: string[]; // Array of document URLs
-  topicId?: string; // Hedera Consensus Service topic ID
-  tokenId?: string; // Associated token ID (if tokens have been created)
+  owner: mongoose.Types.ObjectId;
+  images?: string[]; 
+  documents?: string[];
+  topicId?: string;
+  tokenId?: string;
   verificationHistory: {
     date: Date;
     status: string;
@@ -63,7 +63,7 @@ const ProjectSchema = new Schema(
         default: 'Point'
       },
       coordinates: {
-        type: [Number], // [longitude, latitude]
+        type: [Number],
         required: true
       }
     },
@@ -74,22 +74,27 @@ const ProjectSchema = new Schema(
         default: 'Polygon'
       },
       coordinates: {
-        type: [[[Number]]], // Array of coordinates forming a polygon
+        type: [[[Number]]],
         default: undefined
       }
     },
     area: {
-      type: Number, // In hectares
+      type: Number,
       required: true,
       min: 0
     },
     estimatedCarbonCapture: {
-      type: Number, // In tons of CO2
+      type: Number,
       required: true,
       min: 0
     },
     actualCarbonCapture: {
-      type: Number, // Updated after verification
+      type: Number,
+      min: 0,
+      default: 0
+    },
+    carbonCredits: {
+      type: Number,
       min: 0,
       default: 0
     },
@@ -115,10 +120,10 @@ const ProjectSchema = new Schema(
       ref: 'User',
       required: true
     },
-    images: [String], // Array of image URLs
-    documents: [String], // Array of document URLs
-    topicId: String, // Hedera Consensus Service topic ID
-    tokenId: String, // Associated token ID
+    images: [String],
+    documents: [String],
+    topicId: String, 
+    tokenId: String,
     verificationHistory: [
       {
         date: {

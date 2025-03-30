@@ -45,7 +45,7 @@ async def get_price_history(token_id: str, days: int = 30):
             date = today - datetime.timedelta(days=i)
             price_history.append({
                 "date": date.strftime("%Y-%m-%d"),
-                "price": 15 + i * 0.1  # Sample price with slight upward trend
+                "price": 15 + i * 0.1 
             })
         
         return {"token_id": token_id, "price_history": price_history}

@@ -1,9 +1,6 @@
 import axios from 'axios';
 import { logger } from '../utils/logger';
-import { AppError } from '../middleware/errorHandler';
 
-// For the MVP, we'll simulate AI valuation with a simplified formula
-// In a production environment, this would integrate with the Python AI service
 
 export const valuationService = {
   /**

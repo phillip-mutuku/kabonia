@@ -102,7 +102,6 @@ submitVerificationData: async (
   let headers: Record<string, string> = {};
   
   if (data.documents instanceof FormData) {
-    // If documents is already FormData, use it directly
     const formData = data.documents;
     if (data.additionalInfo) {
       formData.append('additionalInfo', data.additionalInfo);
@@ -152,7 +151,8 @@ submitVerificationData: async (
     projectId: string, 
     verificationData?: {
       documents?: File[];
-      additionalInfo?: string;
+      additionalInfo?: any;
+    calculatedCredits?: number;
     }
   ): Promise<Verification | null> => {
     try {

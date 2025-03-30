@@ -72,14 +72,10 @@ export const executePurchase = createAsyncThunk(
     try {
       // Log the purchase data for debugging
       console.log('Purchase data before API call:', purchaseData);
-      
-      // Make sure listingId is a string and properly formatted for MongoDB ObjectId
       if (!purchaseData.listingId) {
         console.error('Missing listingId in purchase data');
         return rejectWithValue('Missing listing ID');
       }
-      
-      // Ensure listingId is a string
       const listingId = String(purchaseData.listingId);
       
       // Check if it's a valid MongoDB ObjectId (24 character hex string)

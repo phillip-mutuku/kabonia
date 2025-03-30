@@ -72,9 +72,9 @@ export const createToken = async (params: {
       .setSupplyKey(client.operatorPublicKey as Key)
       .setTokenType(TokenType.FungibleCommon)
       .setSupplyType(TokenSupplyType.Finite)
-      .setMaxSupply(initialSupply * 2) // Set max supply to double the initial (can be adjusted)
+      .setMaxSupply(initialSupply * 2)
       .setTokenMemo(memo)
-      .setMaxTransactionFee(new Hbar(20)); // Set a max transaction fee
+      .setMaxTransactionFee(new Hbar(20));
     
     const txResponse = await transaction.execute(client);
     const receipt = await txResponse.getReceipt(client);
@@ -146,34 +146,22 @@ export const transferTokens = async (params: {
     // Log for debugging
     logger.info(`Converting IDs - Original sender: ${typeof senderAccountId}, receiver: ${typeof receiverAccountId}`);
     logger.info(`Converted to strings - sender: ${senderIdStr}, receiver: ${receiverIdStr}`);
-    
-    // For development/testing purposes, use Hedera operator account 
-    // In production, you would map your user IDs to actual Hedera account IDs
+  
     
     // Get Hedera operator account ID (this is a valid Hedera account)
-    const operatorId = client.operatorAccountId?.toString() || '0.0.12345'; // Fallback for testing
+    const operatorId = client.operatorAccountId?.toString() || '0.0.12345';
     
     logger.info(`Using Hedera account ID: ${operatorId} for transaction`);
     
     // Create a mock transaction response for now
-    // In production, you would execute a real transaction with mapped Hedera accounts
+    // In production, I will execute a real transaction with mapped Hedera accounts
     const transactionId = `0.0.${Date.now()}-${Math.floor(Math.random() * 1000000)}`;
     
     logger.info(`Simulated transfer of ${amount} tokens from ${senderIdStr} to ${receiverIdStr}`);
     logger.info(`Transaction ID: ${transactionId}`);
     
     return transactionId;
-    
-    /* Commented out actual Hedera transaction for now
-    const transaction = new TransferTransaction()
-      .addTokenTransfer(TokenId.fromString(tokenId), AccountId.fromString(operatorId), -amount)
-      .addTokenTransfer(TokenId.fromString(tokenId), AccountId.fromString(operatorId), amount)
-      .setMaxTransactionFee(new Hbar(10));
-    
-    const txResponse = await transaction.execute(client);
-    const receipt = await txResponse.getReceipt(client);
-    const transactionId = txResponse.transactionId.toString();
-    */
+  
     
   } catch (error) {
     if (error instanceof Error) {
@@ -191,7 +179,7 @@ export const transferTokens = async (params: {
 export const getTokenInfo = async (tokenId: string): Promise<any> => {
   try {
     const client = getHederaClient();
-    // In a real implementation, you would use the TokenInfoQuery to get token details
+    // In a real implementation, I will use the TokenInfoQuery to get token details
     // This is a placeholder for now
     
     logger.info(`Retrieved info for token ID ${tokenId}`);

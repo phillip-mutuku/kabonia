@@ -1,7 +1,7 @@
 export const constants = {
     // Hedera settings
-    HCS_TOPIC_MEMO: 'CarbonX Transaction Record',
-    HTS_TOKEN_NAME: 'CarbonX Credits',
+    HCS_TOPIC_MEMO: 'Kabonia Transaction Record',
+    HTS_TOKEN_NAME: 'Kabonia Credits',
     HTS_TOKEN_SYMBOL: 'CRX',
     
     // Token and verification settings

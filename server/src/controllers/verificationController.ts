@@ -6,7 +6,6 @@ import { constants } from '../config/constants';
 
 export const verificationController = {
 
-  //update the verification status
   updateVerificationStatus: async (req: Request, res: Response) => {
     try {
       // Ensure user is authenticated

@@ -7,7 +7,7 @@ import { verificationService } from '@/services/verificationService';
 import { Verification, SatelliteImage } from '@/types/verification';
 import { normalizeCoordinates } from '@/types';
 
-// Update the interface to match your actual Project type
+
 interface SatelliteViewProps {
   project: {
     _id: string;
@@ -42,11 +42,11 @@ export const SatelliteView: React.FC<SatelliteViewProps> = ({ project }) => {
   }, [project.coordinates]);
 
   // Get API key from environment variable (or use placeholder for demo)
-  const MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || 'AIzaSyBtcph5bBHTF7PKFhCctZ7cCLb_6VkKZ6k';
+  const MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || 'MAPS_API_KEY';
 
   // Generate satellite image URLs
   const generateImageUrl = (lat: number, lng: number, type: string = 'satellite', zoom: number = 14) => {
-    // For production, ensure this key is properly secured
+    // For production, I will ensure this key is properly secured
     return `https://maps.googleapis.com/maps/api/staticmap?center=${lat},${lng}&zoom=${zoom}&size=600x400&maptype=${type}&key=${MAPS_API_KEY}`;
   };
 

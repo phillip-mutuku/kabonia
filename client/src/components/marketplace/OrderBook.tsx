@@ -33,8 +33,6 @@ const SAMPLE_ORDERS: Order[] = [
 
 export const OrderBook: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'all' | 'buy' | 'sell'>('all');
-  // In a real app, orders would come from the Redux store
-  // const { orders } = useSelector((state: RootState) => state.market);
   
   // For now, we'll use sample data
   const orders = SAMPLE_ORDERS;

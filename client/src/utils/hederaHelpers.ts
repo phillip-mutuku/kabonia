@@ -184,7 +184,6 @@ import {
     tokenId: string
   ): Promise<boolean> => {
     try {
-      // This is a simplified check. In a real implementation, you would query the account's associated tokens
       return true;
     } catch (error) {
       return false;
@@ -197,7 +196,6 @@ import {
     transactionId: string
   ): Promise<any | null> => {
     try {
-      // In a real implementation, you would use Mirror Node API to get transaction details
       return { status: 'SUCCESS' };
     } catch (error) {
       console.error('Error getting transaction details:', error);
@@ -211,7 +209,6 @@ import {
     tokenId: string
   ): Promise<any | null> => {
     try {
-      // In a real implementation, you would query token info using the SDK or Mirror Node API
       return {
         tokenId,
         name: 'Carbon Credit',
@@ -255,7 +252,6 @@ import {
     tokenId: string
   ): Promise<number> => {
     try {
-      // In a real implementation, you would query token balance using the SDK or Mirror Node API
       return 0;
     } catch (error) {
       console.error('Error getting token balance:', error);

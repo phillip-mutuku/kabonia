@@ -45,7 +45,7 @@ const extractId = (idField: any): string => {
   }
   
   console.warn('Invalid MongoDB ObjectId format:', idStr, 'Original value:', idField);
-  return idStr; // Return anyway, but with warning
+  return idStr;
 };
 
 export const TokenCard: React.FC<TokenCardProps> = ({ 

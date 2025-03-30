@@ -27,10 +27,7 @@ import { Token } from '@/types/token';
 import { MarketSummary } from '@/types/market';
 
 export default function Dashboard() {
-  // Use ThunkDispatch to handle async actions more precisely
   const dispatch: ThunkDispatch<RootState, unknown, AnyAction> = useDispatch();
-  
-  // Correctly type the selectors
   const { currentUser: user } = useSelector((state: RootState) => state.user);
   const { projects } = useSelector((state: RootState) => state.project);
   const { tokens } = useSelector((state: RootState) => state.token);

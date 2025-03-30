@@ -42,7 +42,7 @@ export const useHashConnect = () => {
             console.log('Connecting to HashConnect with topic:', topic);
             // In a real implementation, this would handle the HashPack connection
             return {
-              accountIds: ['0.0.1234567'], // This would be the user's account
+              accountIds: ['0.0.1234567'], 
             };
           },
           disconnect: async (topic: string) => {

@@ -2,18 +2,18 @@ import mongoose, { Document, Schema } from 'mongoose';
 
 export interface IToken extends Document {
   tokenId: string; // Hedera token ID
-  projectId: mongoose.Types.ObjectId; // Associated project
+  projectId: mongoose.Types.ObjectId;
   tokenName: string;
   tokenSymbol: string;
   decimals: number;
   initialSupply: number;
   currentSupply: number;
   maxSupply?: number;
-  creator: mongoose.Types.ObjectId; // User who created the token
+  creator: mongoose.Types.ObjectId;
   creationDate: Date;
   lastMintDate?: Date;
   metadata: {
-    [key: string]: any; // Flexible metadata structure
+    [key: string]: any;
   };
   createdAt: Date;
   updatedAt: Date;

@@ -1,15 +1,15 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
 export interface IListing extends Document {
-  tokenId: string; // Hedera token ID
-  projectId: mongoose.Types.ObjectId; // Associated project
-  sellerId: mongoose.Types.ObjectId; // User who listed the tokens
-  amount: number; // Amount of tokens for sale
-  remaining: number; // Remaining amount after partial purchases
+  tokenId: string;
+  projectId: mongoose.Types.ObjectId;
+  sellerId: mongoose.Types.ObjectId;
+  amount: number;
+  remaining: number;
   price: number; // Price per token
   expirationDate: Date;
-  active: boolean; // Whether the listing is active
-  transactionId?: string; // Transaction ID when listing is completed
+  active: boolean;
+  transactionId?: string;
   createdAt: Date;
   updatedAt: Date;
 }

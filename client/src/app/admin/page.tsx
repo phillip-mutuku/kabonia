@@ -2,12 +2,7 @@
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { 
-  Shield, 
-  LogOut, 
-  LayoutDashboard, 
-  Users, 
-  FileText, 
-  Settings, 
+  LogOut,  
   AlertTriangle,
   ChevronDown,
   Edit,
@@ -20,6 +15,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/store';
 import { logout, getProfile } from '@/store/slices/userSlice';
 import { projectService } from '@/services/projectService';
+import { carbonCalculationService } from '@/services/carbonCalculationService';
 import { Project, ProjectStatus } from '@/types/project';
 
 export default function AdminDashboard() {
@@ -138,9 +134,34 @@ export default function AdminDashboard() {
 
   async function handleStatusChange(projectId: string, newStatus: ProjectStatus) {
     try {
-      await projectService.updateProject(projectId, {
-        status: newStatus
-      });
+      // If changing to VERIFIED status, calculate carbon credits
+      if (newStatus === ProjectStatus.VERIFIED) {
+        // Find the current project in your state
+        const project = allProjects.find(p => p._id === projectId);
+        
+        if (project) {
+          // Calculate carbon credits using the service
+          const calculatedCredits = carbonCalculationService.calculateCredits(project);
+          
+          // Update project with both status and calculated credits
+          await projectService.updateProject(projectId, {
+            status: newStatus,
+            carbonCredits: calculatedCredits
+          });
+          
+          alert(`Project verified and ${calculatedCredits} carbon credits calculated.`);
+        } else {
+          // Just update status if project not found in state
+          await projectService.updateProject(projectId, {
+            status: newStatus
+          });
+        }
+      } else {
+        // For other status changes, just update the status
+        await projectService.updateProject(projectId, {
+          status: newStatus
+        });
+      }
       
       // Close modal if open
       setIsEditModalOpen(false);
@@ -152,8 +173,9 @@ export default function AdminDashboard() {
       console.error('Project status update error:', error);
       alert('Failed to update project status. Please try again.');
     }
-  }
+  };
 
+  
   // Function to get a readable status display
   const formatStatus = (status: ProjectStatus): string => {
     return status.replace('_', ' ').split('_')

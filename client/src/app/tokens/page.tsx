@@ -14,18 +14,12 @@ import { BuySellForm } from '@/components/marketplace/BuySellForm';
 
 const extractId = (idField: any): string => {
   if (!idField) return '';
-  
-  // If it's an object with _id property (MongoDB style)
   if (typeof idField === 'object' && idField._id) {
     return idField._id;
   }
-  
-  // If it's an object with id property
   if (typeof idField === 'object' && idField.id) {
     return idField.id;
   }
-  
-  // If it's already a string or other primitive, use it directly
   return String(idField);
 };
 
@@ -459,7 +453,6 @@ const TokenCard: React.FC<TokenCardProps> = ({ token, onSellClick }) => {
         </span>
       </Link>
         
-      {/* Fix the price.toFixed issue */}
       <div className="mt-3 grid grid-cols-2 gap-2">
         <div>
           <p className="text-xs text-gray-500">Price</p>

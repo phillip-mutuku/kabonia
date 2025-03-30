@@ -9,9 +9,6 @@ import { logout } from '@/store/slices/userSlice';
 import { useHashConnect } from '@/hooks/useHashConnect';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// First install react-icons:
-// npm install react-icons
-// or: yarn add react-icons
 import { 
   FiHome, 
   FiFolder, 

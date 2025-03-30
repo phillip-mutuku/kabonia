@@ -463,8 +463,6 @@ export const tokenService = {
    */
   getTokenBalance: async (tokenId: string, userId: string): Promise<number> => {
     try {
-      // In a real implementation, this would query the Hedera network for token balance
-      // For this MVP, we'll calculate from transactions
       
       // Find all incoming transactions (receive)
       const incomingTransactions = await Transaction.find({

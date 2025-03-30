@@ -28,8 +28,6 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
   const router = useRouter();
   const { currentProject, isLoading: loading, error } = useSelector((state: RootState) => state.project);
   const { currentUser: user } = useSelector((state: RootState) => state.user);
-  
-  // Add the useState hook here, not inside the render logic
   const [mapLoaded, setMapLoaded] = useState(false);
   const [mapError, setMapError] = useState(false);
 
@@ -41,7 +39,6 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
 
 
 
-  // Add this at the top of your ProjectDetailPage component
 useEffect(() => {
   // Check for Google Maps API key
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
@@ -51,7 +48,6 @@ useEffect(() => {
     console.warn('Google Maps API Key is missing. Set NEXT_PUBLIC_GOOGLE_MAPS_API_KEY in your .env.local file');
   } else {
     console.log('API Key length:', apiKey.length);
-    // Don't log the full key for security reasons
     console.log('API Key starts with:', apiKey.substring(0, 4) + '...');
   }
   
@@ -78,7 +74,6 @@ useEffect(() => {
       const testUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${normalized.lat},${normalized.lng}&zoom=10&size=600x400&maptype=hybrid&key=${apiKey}`;
       console.log('Test URL for map:', testUrl);
       
-      // Test the URL in a hidden way (don't actually try to load the image)
       const testImg = new Image();
       testImg.onerror = () => console.error('Test map URL failed to load');
       testImg.onload = () => console.log('Test map URL loaded successfully');
@@ -104,7 +99,6 @@ useEffect(() => {
 
   // Function to derive verification status from project data
   const deriveVerificationStatus = (project: Project): string => {
-    // If the project status is completed or active, treat it as verified
     if (project.status === ProjectStatus.COMPLETED || project.status === ProjectStatus.ACTIVE) {
       return VerificationStatus.APPROVED;
     }
@@ -362,7 +356,9 @@ useEffect(() => {
                         </div>
                         <div>
                           <dt className="text-gray-500">Carbon Credits</dt>
-                          <dd className="mt-1 text-gray-900">{currentProject.carbonCredits || 'Not yet verified'}</dd>
+                          <dd className="mt-1 text-gray-900">
+                            {currentProject.carbonCredits || currentProject.actualCarbonCapture || 'Not yet verified'}
+                          </dd>
                         </div>
                         <div>
                           <dt className="text-gray-500">Verified Status</dt>
@@ -460,8 +456,6 @@ useEffect(() => {
                               <div className="h-64 bg-gray-100 relative">
                                 {(() => {
                                   const coords = normalizeCoordinates(currentProject.coordinates);
-                                  
-                                  // Debug coordinates in console to see what we're working with
                                   console.log('Project coordinates:', currentProject.coordinates);
                                   console.log('Normalized coordinates:', coords);
                                   
@@ -551,119 +545,119 @@ useEffect(() => {
                               </div>
                             </Card>
                 
-                {/* Project Owner */}
-                <Card className="overflow-hidden">
-                  <div className="px-4 py-5 sm:px-6 border-b border-gray-200">
-                    <h3 className="text-base leading-6 font-medium text-gray-900">Project Owner</h3>
-                  </div>
-                  <div className="px-4 py-5 sm:p-6">
-                    <div className="flex items-center">
-                      <div className="h-10 w-10 rounded-full bg-primary-600 flex items-center justify-center text-white font-semibold">
-                        {currentProject.ownerName ? currentProject.ownerName.charAt(0) : 'U'}
-                      </div>
-                      <div className="ml-3">
-                        <div className="text-sm font-medium text-gray-900">{currentProject.ownerName || 'Unknown Owner'}</div>
-                        <div className="text-xs text-gray-500">{isOwner ? 'You are the owner' : 'Project Developer'}</div>
-                      </div>
-                    </div>
-                    
-                    {!isOwner && (
-                      <div className="mt-4 pt-4 border-t border-gray-200">
-                        <Button
-                          onClick={() => router.push(`/messages?recipient=${currentProject.owner}`)}
-                          variant="secondary"
-                          fullWidth
-                        >
-                          <svg
-                            className="-ml-1 mr-2 h-5 w-5"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-4l-4 4z"
-                            />
-                          </svg>
-                          Contact Owner
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                </Card>
-                
-                {/* Token Actions */}
-                {(deriveVerificationStatus(currentProject) === VerificationStatus.VERIFIED || 
-                  deriveVerificationStatus(currentProject) === VerificationStatus.APPROVED) && (
-                  <Card className="overflow-hidden">
-                    <div className="px-4 py-5 sm:px-6 border-b border-gray-200">
-                      <h3 className="text-base leading-6 font-medium text-gray-900">Carbon Credits</h3>
-                    </div>
-                    <div className="px-4 py-5 sm:p-6">
-                      <div className="flex justify-between items-baseline mb-2">
-                        <span className="text-sm text-gray-500">Credit Price</span>
-                        <span className="text-lg font-bold text-gray-900">${currentProject.price || '15.00'}</span>
-                      </div>
-                      <div className="flex justify-between items-baseline mb-6">
-                        <span className="text-sm text-gray-500">Available Credits</span>
-                        <span className="text-lg font-bold text-gray-900">{currentProject.carbonCredits || 0}</span>
-                      </div>
+                      {/* Project Owner */}
+                      <Card className="overflow-hidden">
+                        <div className="px-4 py-5 sm:px-6 border-b border-gray-200">
+                          <h3 className="text-base leading-6 font-medium text-gray-900">Project Owner</h3>
+                        </div>
+                        <div className="px-4 py-5 sm:p-6">
+                          <div className="flex items-center">
+                            <div className="h-10 w-10 rounded-full bg-primary-600 flex items-center justify-center text-white font-semibold">
+                              {currentProject.ownerName ? currentProject.ownerName.charAt(0) : 'U'}
+                            </div>
+                            <div className="ml-3">
+                              <div className="text-sm font-medium text-gray-900">{currentProject.ownerName || 'Unknown Owner'}</div>
+                              <div className="text-xs text-gray-500">{isOwner ? 'You are the owner' : 'Project Developer'}</div>
+                            </div>
+                          </div>
+                          
+                          {!isOwner && (
+                            <div className="mt-4 pt-4 border-t border-gray-200">
+                              <Button
+                                onClick={() => router.push(`/messages?recipient=${currentProject.owner}`)}
+                                variant="secondary"
+                                fullWidth
+                              >
+                                <svg
+                                  className="-ml-1 mr-2 h-5 w-5"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-4l-4 4z"
+                                  />
+                                </svg>
+                                Contact Owner
+                              </Button>
+                            </div>
+                          )}
+                        </div>
+                      </Card>
                       
-                      <div className="space-y-3">
-                        <Button
-                          onClick={() => router.push(`/marketplace?projectId=${id}`)}
-                          variant="primary"
-                          fullWidth
-                        >
-                          <svg
-                            className="-ml-1 mr-2 h-5 w-5"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                            />
-                          </svg>
-                          Buy Credits
-                        </Button>
-                        
-                        {isOwner && (
-                          <Button
-                            onClick={() => router.push(`/tokens/mint?project=${id}`)}
-                            variant="secondary"
-                            fullWidth
-                          >
-                            <svg
-                              className="-ml-1 mr-2 h-5 w-5"
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                              />
-                            </svg>
-                            Mint Credits
-                          </Button>
-                        )}
-                      </div>
+                      {/* Token Actions */}
+                      {(deriveVerificationStatus(currentProject) === VerificationStatus.VERIFIED || 
+                        deriveVerificationStatus(currentProject) === VerificationStatus.APPROVED) && (
+                        <Card className="overflow-hidden">
+                          <div className="px-4 py-5 sm:px-6 border-b border-gray-200">
+                            <h3 className="text-base leading-6 font-medium text-gray-900">Carbon Credits</h3>
+                          </div>
+                          <div className="px-4 py-5 sm:p-6">
+                            <div className="flex justify-between items-baseline mb-2">
+                              <span className="text-sm text-gray-500">Credit Price</span>
+                              <span className="text-lg font-bold text-gray-900">${currentProject.price || '15.00'}</span>
+                            </div>
+                            <div className="flex justify-between items-baseline mb-6">
+                              <span className="text-sm text-gray-500">Available Credits</span>
+                              <span className="text-lg font-bold text-gray-900">{currentProject.carbonCredits || 0}</span>
+                            </div>
+                            
+                            <div className="space-y-3">
+                              <Button
+                                onClick={() => router.push(`/marketplace?projectId=${id}`)}
+                                variant="primary"
+                                fullWidth
+                              >
+                                <svg
+                                  className="-ml-1 mr-2 h-5 w-5"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                                  />
+                                </svg>
+                                Buy Credits
+                              </Button>
+                              
+                              {isOwner && (
+                                <Button
+                                  onClick={() => router.push(`/tokens/mint?project=${id}`)}
+                                  variant="secondary"
+                                  fullWidth
+                                >
+                                  <svg
+                                    className="-ml-1 mr-2 h-5 w-5"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                    />
+                                  </svg>
+                                  Mint Credits
+                                </Button>
+                              )}
+                            </div>
+                          </div>
+                        </Card>
+                      )}
                     </div>
-                  </Card>
-                )}
-              </div>
-            </div>
+                  </div>
             
             {/* Similar Projects */}
             <Card className="overflow-hidden">
@@ -673,8 +667,6 @@ useEffect(() => {
               <div className="px-4 py-5 sm:p-6">
                 <p className="text-sm text-gray-500 mb-4">Other {currentProject.projectType} projects you might be interested in:</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {/* This would be populated with actual similar projects */}
-                  {/* For now, showing a placeholder */}
                   <div className="border border-gray-200 rounded-md p-4">
                     <div className="h-24 bg-gray-100 rounded-md mb-2 flex items-center justify-center text-gray-400 text-sm">
                       Similar Project Preview

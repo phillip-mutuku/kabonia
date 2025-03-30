@@ -123,7 +123,7 @@ export const marketService = {
       
       // Execute query with pagination
       const listings = await Listing.find(query)
-        .sort({ price: 1, createdAt: -1 }) // Sort by price ascending, then newest first
+        .sort({ price: 1, createdAt: -1 })
         .skip((page - 1) * limit)
         .limit(limit)
         .populate('projectId', 'name location')
