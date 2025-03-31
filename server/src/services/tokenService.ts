@@ -323,8 +323,8 @@ export const tokenService = {
       
       // Check if minting would exceed max supply
       const maxSupply = token.maxSupply || Number.MAX_SAFE_INTEGER;
-      if (token.currentSupply + amount > maxSupply) {
-        throw new AppError(`Minting ${amount} tokens would exceed the maximum supply of ${maxSupply}`, 400);
+      if (project.carbonCredits && amount > project.carbonCredits) {
+        throw new AppError(`Minting ${amount} tokens would exceed available project credits of ${project.carbonCredits}`, 400);
       }
         
       // Mint tokens on Hedera

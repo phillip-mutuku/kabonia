@@ -72,7 +72,7 @@ export const createToken = async (params: {
       .setSupplyKey(client.operatorPublicKey as Key)
       .setTokenType(TokenType.FungibleCommon)
       .setSupplyType(TokenSupplyType.Finite)
-      .setMaxSupply(initialSupply * 2)
+      .setMaxSupply(1000000000)
       .setTokenMemo(memo)
       .setMaxTransactionFee(new Hbar(20));
     

@@ -66,6 +66,7 @@ export interface TokenBalance {
   projectId: string;
   projectName: string;
   amount: number;
+  balance: number;
   price: number;  
   carbonOffset: number;
   projectType: string;

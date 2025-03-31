@@ -22,6 +22,7 @@ export interface IProject extends Document {
   area: number;
   estimatedCarbonCapture: number;
   actualCarbonCapture?: number;
+  carbonCredits?: number;
   startDate: Date;
   endDate: Date;
   projectType: string;

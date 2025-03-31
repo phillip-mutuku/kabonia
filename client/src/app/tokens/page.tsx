@@ -66,6 +66,12 @@ export default function TokensPage() {
   };
 
 
+
+  const getTotalAvailableTokens = () => {
+    return userTokens.reduce((total, token) => total + (token.balance || 0), 0);
+  };
+
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
@@ -304,7 +310,7 @@ export default function TokensPage() {
                 initialMode="sell"
                 prefilledAmount={1}
                 prefilledPrice={selectedToken?.price}
-                maxAmount={selectedToken?.amount || 100}
+                maxAmount={selectedToken?.balance || getTotalAvailableTokens()}
                 onComplete={handleBuySellComplete}
               />
               </div>
@@ -422,12 +428,12 @@ const TokenCard: React.FC<TokenCardProps> = ({ token, onSellClick }) => {
             {getProjectTypeIcon(token.projectType)}
           </div>
         )}
-        <div className="absolute top-2 right-2">
-          <span className="inline-flex items-center px-2 py-1 rounded-full bg-white bg-opacity-80 text-xs font-medium text-gray-800">
-            <span className="mr-1">{token.amount}</span>
-            Credits
-          </span>
-        </div>
+       <div className="absolute top-2 right-2">
+        <span className="inline-flex items-center px-2 py-1 rounded-full bg-white bg-opacity-80 text-xs font-medium text-gray-800">
+          <span className="mr-1">{token.balance}</span> 
+          Credits
+        </span>
+      </div>
         {token.verified && (
           <div className="absolute top-2 left-2">
             <span className="inline-flex items-center px-2 py-1 rounded-full bg-green-100 text-xs font-medium text-green-800">

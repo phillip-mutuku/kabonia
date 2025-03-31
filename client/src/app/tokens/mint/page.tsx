@@ -100,7 +100,7 @@ export default function MintTokensPage() {
       await dispatch(mintTokens({
         tokenId: tokenId,
         amount: amount,
-        ownerId: currentProject.owner // This should be the current user ID
+        ownerId: currentProject.owner
       }) as any);
       
       // Redirect to tokens page
